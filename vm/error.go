@@ -23,9 +23,10 @@ import (
 //
 type Error struct {
 	*baseObj
-	message     string
-	stackTraces []string
-	Type        string
+	message      string
+	stackTraces  []string
+	storedTraces bool
+	Type         string
 }
 
 // Internal functions ===================================================

@@ -751,7 +751,7 @@ func builtinHashInstanceMethods() []*BuiltinMethodObject {
 						values[index] = value
 					}
 
-					if blockFrame != nil && ! blockFramePopped {
+					if blockFrame != nil && !blockFramePopped {
 						t.callFrameStack.pop()
 					}
 
