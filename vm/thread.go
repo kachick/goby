@@ -63,6 +63,7 @@ func (t *thread) evalCallFrame(cf callFrame) {
 		result := cf.method(t, args, cf.blockFrame)
 		t.stack.push(&Pointer{Target: result})
 
+		fmt.Println(t.stack.inspect())
 		if t.hasError() {
 			return
 		}
@@ -146,8 +147,10 @@ func (t *thread) builtinMethodYield(blockFrame *normalCallFrame, args ...Object)
 		c.insertLCL(i, 0, args[i])
 	}
 
+	fmt.Println("Yield Start")
 	t.callFrameStack.push(c)
 	t.startFromTopFrame()
+	fmt.Println("Yield End")
 
 	return t.stack.top()
 }

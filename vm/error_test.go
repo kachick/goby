@@ -181,44 +181,60 @@ func TestStackTraces(t *testing.T) {
 		expectedTraces []string
 		expectedCFP    int
 	}{
-		{`def foo(a, b, c)
-		  a + b + c
+		//{`def foo(a, b, c)
+		//  a + b + c
+		//end
+		//
+		//def bar
+		//  arr = [1, 2, 3, 5]
+		//  foo(*arr)
+		//end
+		//
+		//bar
+		//`,
+		//	"ArgumentError: Expect at most 3 args for method 'foo'. got: 4",
+		//	[]string{
+		//		fmt.Sprintf("from %s:7", getFilename()),
+		//		fmt.Sprintf("from %s:10", getFilename()),
+		//	},
+		//	2,
+		//},
+		//{`def foo(a, b, c)
+		//  a + b + c
+		//end
+		//
+		//def bar
+		//  arr = [1, 2, 3, 5]
+		//  foo(*arr)
+		//end
+		//
+		//def baz
+		//  bar
+		//end
+		//
+		//baz
+		//`,
+		//	"ArgumentError: Expect at most 3 args for method 'foo'. got: 4",
+		//	[]string{
+		//		fmt.Sprintf("from %s:7", getFilename()),
+		//		fmt.Sprintf("from %s:11", getFilename()),
+		//		fmt.Sprintf("from %s:14", getFilename()),
+		//	},
+		//	3,
+		//},
+		{`def foo
+		  10
 		end
 
-		def bar
-		  arr = [1, 2, 3, 5]
-		  foo(*arr)
+		[1, 2, 3].each do |i|
+		  puts(i)
+		  foo(i)
 		end
-
-		bar
 		`,
 			"ArgumentError: Expect at most 3 args for method 'foo'. got: 4",
 			[]string{
-				fmt.Sprintf("from %s:7", getFilename()),
-				fmt.Sprintf("from %s:10", getFilename()),
-			},
-			2,
-		},
-		{`def foo(a, b, c)
-		  a + b + c
-		end
-
-		def bar
-		  arr = [1, 2, 3, 5]
-		  foo(*arr)
-		end
-
-		def baz
-		  bar
-		end
-
-		baz
-		`,
-			"ArgumentError: Expect at most 3 args for method 'foo'. got: 4",
-			[]string{
-				fmt.Sprintf("from %s:7", getFilename()),
-				fmt.Sprintf("from %s:11", getFilename()),
-				fmt.Sprintf("from %s:14", getFilename()),
+				fmt.Sprintf("from %s:6", getFilename()),
+				fmt.Sprintf("from %s:5", getFilename()),
 			},
 			3,
 		},
