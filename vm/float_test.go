@@ -202,6 +202,8 @@ func TestFloatConversions(t *testing.T) {
 	}{
 		{`(100.3).to_i`, 100},
 		{`(100.3).to_s`, "100.3"},
+		{`100.3.to_i`, 100},
+		{`100.3.to_s`, "100.3"},
 	}
 
 	for i, tt := range tests {
