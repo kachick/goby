@@ -10,6 +10,7 @@ import (
 // A type alias for representing a decimal
 type Decimal = big.Rat
 
+// (Experiment)
 // DecimalObject represents a comparable decimal number using Go's Rat from math/big
 // representation, which consists of a numerator and a denominator with arbitrary size.
 // The numerator can be 0, but the denominator cannot be 0.
@@ -328,23 +329,21 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 				}
 			},
 		},
-		//	{
-		//		// Returns the `Integer` representation of self.
-		//		//
-		//		// ```Ruby
-		//		// 100.1.to_i # => 100
-		//		// ```
-		//		// @return [Integer]
-		//		Name: "to_i",
-		//		Fn: func(receiver Object, sourceLine int) builtinMethodBody {
-		//			return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
-		//				r := receiver.(*FloatObject)
-		//				newInt := t.vm.initIntegerObject(int(r.value))
-		//				newInt.flag = i
-		//				return newInt
-		//			}
-		//		},
-		//	},
+		{
+			// Returns the decimal value with a string style.
+			//
+			// ```Ruby
+			// a = "355/133".to_d
+			// a.to_s # => 3.14159292
+			// ```
+			// @return [String]
+			Name: "to_s",
+			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
+				return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
+					return t.vm.initStringObject(receiver.(*DecimalObject).toString())
+				}
+			},
+		},
 		//	{
 		//		Name: "ptr",
 		//		Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -428,7 +427,7 @@ func (d *DecimalObject) equalityTest(
 	t *thread,
 	rightObject Object,
 	decimalOperation func(leftValue *Decimal, rightValue *Decimal) bool,
-	noninverse bool,
+	nonInverse bool,
 	sourceLine int,
 ) Object {
 	var rightValue *Decimal
@@ -438,7 +437,7 @@ func (d *DecimalObject) equalityTest(
 	case *DecimalObject:
 		rightValue = &rightObject.(*DecimalObject).value
 	default:
-		return toBooleanObject(noninverse == false)
+		return toBooleanObject(nonInverse == false)
 	}
 
 	leftValue := &d.value
@@ -502,10 +501,9 @@ func (d *DecimalObject) rocketComparison(
 	return newInt
 }
 
-// toString returns the object's value as the string format, in non
-// exponential format (straight number, without exponent `E<exp>`).
+// toString returns the object's value as the string format.
 func (d *DecimalObject) toString() string {
-	return d.value.FloatString(0)
+	return d.value.FloatString(2)
 }
 
 // toJSON just delegates to toString
