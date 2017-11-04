@@ -22,27 +22,28 @@ func TestDecimalClassSuperclass(t *testing.T) {
 	}
 }
 
-//func TestDecimalArithmeticOperationWithDecimal(t *testing.T) {
-//	tests := []struct {
-//		input    string
-//		expected interface{}
-//	}{
-//		{`'13.5'.to_d  +  '3.2'.to_d`, 16.7},
-//		{`'13.5'.to_d  -  '3.2'.to_d`, 10.3},
-//		{`'13.5'.to_d  *  '3.2'.to_d`, 43.2},
-//		//{`'13.5'.to_d  %  '3.75'.to_d`, 2.25},
-//		{`'13.5'.to_d  /  '3.75'.to_d`, 3.6},
-//		//{`'16.0'.to_d  ** '3.5'.to_d`, 16384.0},
-//	}
-//
-//	for i, tt := range tests {
-//		v := initTestVM()
-//		evaluated := v.testEval(t, tt.input, getFilename())
-//		checkExpected(t, i, evaluated, tt.expected)
-//		v.checkCFP(t, i, 0)
-//		v.checkSP(t, i, 1)
-//	}
-//}
+func TestDecimalArithmeticOperationWithDecimal(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`('13.5'.to_d  +  '3.5'.to_d).to_s`, "17"},
+		{`('13.5'.to_d  +  '3.2'.to_d).to_s`, "16.7"},
+		{`('13.5'.to_d  -  '3.2'.to_d).to_s`, "10.3"},
+		{`('13.5'.to_d  *  '3.2'.to_d).to_s`, "43.2"},
+		//{`'13.5'.to_d  %  '3.75'.to_d`, 2.25},
+		{`('13.5'.to_d  /  '3.75'.to_d).to_s`, "3.6"},
+		//{`'16.0'.to_d  ** '3.5'.to_d`, 16384.0},
+	}
+
+	for i, tt := range tests {
+		v := initTestVM()
+		evaluated := v.testEval(t, tt.input, getFilename())
+		checkExpected(t, i, evaluated, tt.expected)
+		v.checkCFP(t, i, 0)
+		v.checkSP(t, i, 1)
+	}
+}
 
 //func TestDecimalArithmeticOperationWithInteger(t *testing.T) {
 //	tests := []struct {
@@ -66,22 +67,22 @@ func TestDecimalClassSuperclass(t *testing.T) {
 //	}
 //}
 
-//func TestDecimalArithmeticOperationFail(t *testing.T) {
-//	testsFail := []errorTestCase{
-//		{`'1'.to_d + "p"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d - "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d ** "p"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d / "t"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//	}
-//
-//	for i, tt := range testsFail {
-//		v := initTestVM()
-//		evaluated := v.testEval(t, tt.input, getFilename())
-//		checkError(t, i, evaluated, tt.expected, getFilename(), tt.errorLine)
-//		v.checkCFP(t, i, tt.expectedCFP)
-//		v.checkSP(t, i, 1)
-//	}
-//}
+func TestDecimalArithmeticOperationFail(t *testing.T) {
+	testsFail := []errorTestCase{
+		{`'1'.to_d + "p"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		{`'1'.to_d - "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		//{`'1'.to_d ** "p"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		{`'1'.to_d / "t"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+	}
+
+	for i, tt := range testsFail {
+		v := initTestVM()
+		evaluated := v.testEval(t, tt.input, getFilename())
+		checkError(t, i, evaluated, tt.expected, getFilename(), tt.errorLine)
+		v.checkCFP(t, i, tt.expectedCFP)
+		v.checkSP(t, i, 1)
+	}
+}
 
 func TestDecimalComparisonWithFloat(t *testing.T) {
 	tests := []struct {
@@ -145,23 +146,23 @@ func TestDecimalComparisonWithFloat(t *testing.T) {
 //	}
 //}
 
-//func TestDecimalComparisonFail(t *testing.T) {
-//	testsFail := []errorTestCase{
-//		{`'1'.to_d > "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d >= "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d < "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d <= "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//		{`'1'.to_d <=> "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
-//	}
-//
-//	for i, tt := range testsFail {
-//		v := initTestVM()
-//		evaluated := v.testEval(t, tt.input, getFilename())
-//		checkError(t, i, evaluated, tt.expected, getFilename(), tt.errorLine)
-//		v.checkCFP(t, i, tt.expectedCFP)
-//		v.checkSP(t, i, 1)
-//	}
-//}
+func TestDecimalComparisonFail(t *testing.T) {
+	testsFail := []errorTestCase{
+		{`'1'.to_d > "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		{`'1'.to_d >= "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		{`'1'.to_d < "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		{`'1'.to_d <= "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+		{`'1'.to_d <=> "m"`, "TypeError: Expect argument to be Numeric. got: String", 1, 1},
+	}
+
+	for i, tt := range testsFail {
+		v := initTestVM()
+		evaluated := v.testEval(t, tt.input, getFilename())
+		checkError(t, i, evaluated, tt.expected, getFilename(), tt.errorLine)
+		v.checkCFP(t, i, tt.expectedCFP)
+		v.checkSP(t, i, 1)
+	}
+}
 
 func TestDecimalEquality(t *testing.T) {
 	tests := []struct {

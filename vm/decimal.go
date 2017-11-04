@@ -19,7 +19,7 @@ type Decimal = big.Rat
 // ```ruby
 // "3.14".to_d            # => 3.14
 // "-0.7238943".to_d      # => -0.7238943
-// "355/113".to_d         # => 3.14159292
+// "355/113".to_d         # => 3.1415929203539823008849557522123893805309734513274336283185840
 //
 // a = "1.1".to_d
 // b = "1.0".to_d
@@ -342,13 +342,13 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			//
 			// ```Ruby
 			// a = "-355/113".to_d
-			// a.deduct #=> -355/113
+			// a.reduction #=> -355/113
 			// b = "-331/1".to_d
-			// b.deduct #=> -331
+			// b.reduction #=> -331
 			// ```
 			//
 			// @return [String]
-			Name: "deduct",
+			Name: "reduction",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
 				return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
 					return t.vm.initStringObject(receiver.(*DecimalObject).value.RatString())
@@ -503,7 +503,7 @@ func (d *DecimalObject) arithmeticOperation(
 	//case *FloatObject:
 	//	rightValue = Decimal(new(Decimal).SetFloat64(float64(rightObject.(*FloatObject).value)))
 	default:
-		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Decimal", rightObject.Class().Name)
+		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
 
 	leftValue := &d.value
@@ -555,7 +555,7 @@ func (d *DecimalObject) numericComparison(
 		//case *FloatObject:
 		//	rightValue = Decimal(new(Decimal).SetFloat64(float64(rightObject.(*FloatObject).value)))
 	default:
-		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Decimal", rightObject.Class().Name)
+		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
 
 	leftValue := &d.value
@@ -584,7 +584,7 @@ func (d *DecimalObject) rocketComparison(
 		//case *FloatObject:
 		//	rightValue = Decimal(new(Decimal).SetFloat64(float64(rightObject.(*FloatObject).value)))
 	default:
-		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Decimal", rightObject.Class().Name)
+		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
 	result = decimalOperation(leftValue, rightValue)
 	newInt := t.vm.initIntegerObject(result)
