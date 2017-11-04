@@ -486,9 +486,9 @@ func (d *DecimalObject) arithmeticOperation(
 	case *DecimalObject:
 		rightValue = &rightObject.(*DecimalObject).value
 	case *IntegerObject:
-		rightValue = new(Decimal).SetInt64(int64(rightObject.(*IntegerObject).value))
+		rightValue = intToDecimal(rightObject)
 	case *FloatObject:
-		rightValue = new(Decimal).SetFloat64(float64(rightObject.(*FloatObject).value))
+		rightValue = floatToDecimal(rightObject)
 	default:
 		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
@@ -538,9 +538,9 @@ func (d *DecimalObject) numericComparison(
 	case *DecimalObject:
 		rightValue = &rightObject.(*DecimalObject).value
 	case *IntegerObject:
-		rightValue = new(Decimal).SetInt64(int64(rightObject.(*IntegerObject).value))
+		rightValue = intToDecimal(rightObject)
 	case *FloatObject:
-		rightValue = new(Decimal).SetFloat64(float64(rightObject.(*FloatObject).value))
+		rightValue = floatToDecimal(rightObject)
 	default:
 		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
@@ -565,9 +565,9 @@ func (d *DecimalObject) rocketComparison(
 	case *DecimalObject:
 		rightValue = &rightObject.(*DecimalObject).value
 	case *IntegerObject:
-		rightValue = new(Decimal).SetInt64(int64(rightObject.(*IntegerObject).value))
+		rightValue = intToDecimal(rightObject)
 	case *FloatObject:
-		rightValue = new(Decimal).SetFloat64(float64(rightObject.(*FloatObject).value))
+		rightValue = floatToDecimal(rightObject)
 	default:
 		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
@@ -590,4 +590,16 @@ func (d *DecimalObject) toString() string {
 // toJSON just delegates to toString
 func (d *DecimalObject) toJSON() string {
 	return d.toString()
+}
+
+// Other helper functions  ----------------------------------------------
+
+// intToDecimal converts int to Decimal
+func intToDecimal(i Object) *Decimal {
+	return new(Decimal).SetInt64(int64(i.(*IntegerObject).value))
+}
+
+// floatToDecimal converts int to Decimal
+func floatToDecimal(i Object) *Decimal {
+	return new(Decimal).SetFloat64(float64(i.(*FloatObject).value))
 }
