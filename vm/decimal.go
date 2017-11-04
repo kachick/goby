@@ -415,6 +415,40 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			},
 		},
 		{
+			// Returns Float object from Decimal object.
+			// In most case the number of digits in Float is shorter than the one in Decimal.
+			//
+			// ```Ruby
+			// a = "355/113".to_d
+			// a.to_s # => 3.1415929203539823008849557522123893805309734513274336283185840
+			// a.to_f # => 3.1415929203539825
+			// ```
+			//
+			// @return [Float]
+			Name: "to_f",
+			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
+				return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
+					return t.vm.initFloatObject(receiver.(*DecimalObject).FloatValue())
+				}
+			},
+		},
+		{
+			// Returns the truncated Integer object from Decimal object.
+			//
+			// ```Ruby
+			// a = "355/113".to_d
+			// a.to_i # => 3
+			// ```
+			//
+			// @return [Integer]
+			Name: "to_i",
+			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
+				return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
+					return t.vm.initIntegerObject(receiver.(*DecimalObject).IntegerValue())
+				}
+			},
+		},
+		{
 			// Returns the decimal value with a string style.
 			// Maximum digit under the dots is 60.
 			// This is just to print the final value should not be used for recalculation.
@@ -460,16 +494,16 @@ func (f *DecimalObject) Value() interface{} {
 	return f.value
 }
 
-//// Returns integer part of decimal
-//func (f *DecimalObject) IntegerValue() interface{} {
-//	return int(f.value)
-//}
-//
-//// Float interface
-//func (f *DecimalObject) FloatValue() float64 {
-//	x, _ := f.value.Float64()
-//	return x
-//}
+// Returns integer part of decimal
+func (f *DecimalObject) IntegerValue() int {
+	return int(f.FloatValue())
+}
+
+// Float interface
+func (f *DecimalObject) FloatValue() float64 {
+	x, _ := f.value.Float64()
+	return x
+}
 
 // TODO: Remove instruction argument
 // Apply the passed arithmetic operation, while performing type conversion.
