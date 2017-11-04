@@ -5,6 +5,7 @@ import (
 
 	"github.com/goby-lang/goby/vm/classes"
 	"github.com/goby-lang/goby/vm/errors"
+	"strings"
 )
 
 // A type alias for representing a decimal
@@ -16,6 +17,10 @@ type Decimal = big.Rat
 // The numerator can be 0, but the denominator cannot be 0.
 //
 // ```ruby
+// "3.14".to_d            # => 3.14
+// "-0.7238943".to_d      # => -0.7238943
+// "355/113".to_d         # => 3.14159292
+//
 // a = "1.1".to_d
 // b = "1.0".to_d
 // c = "0.1".to_d
@@ -331,11 +336,14 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 		},
 		{
 			// Returns the decimal value with a string style.
+			// Maximum digit under the dots is 60, and a trailing 0 is always added.
+			// This is just to print the final value should not be used for recalculation.
 			//
 			// ```Ruby
-			// a = "355/133".to_d
-			// a.to_s # => 3.14159292
+			// a = "355/113".to_d
+			// a.to_s # => 3.1415929203539823008849557522123893805309734513274336283185840
 			// ```
+			//
 			// @return [String]
 			Name: "to_s",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -344,15 +352,6 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 				}
 			},
 		},
-		//	{
-		//		Name: "ptr",
-		//		Fn: func(receiver Object, sourceLine int) builtinMethodBody {
-		//			return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
-		//				r := receiver.(*FloatObject)
-		//				return t.vm.initGoObject(&r.value)
-		//			}
-		//		},
-		//	},
 	}
 }
 
@@ -386,7 +385,6 @@ func (f *DecimalObject) Value() interface{} {
 //	return int(f.value)
 //}
 //
-//// TODO: reserve accuracy attribute on Float object
 //// Float interface
 //func (f *DecimalObject) FloatValue() float64 {
 //	x, _ := f.value.Float64()
@@ -501,9 +499,11 @@ func (d *DecimalObject) rocketComparison(
 	return newInt
 }
 
-// toString returns the object's value as the string format.
+// toString returns the object's approximate float value as the string format.
+// A trailing 0 is always added even no digits are left on the right side of the dot.
 func (d *DecimalObject) toString() string {
-	return d.value.FloatString(2)
+	fs := d.value.FloatString(60)
+	return strings.TrimRight(fs, "0") + "0"
 }
 
 // toJSON just delegates to toString

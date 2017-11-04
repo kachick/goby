@@ -1458,7 +1458,7 @@ func builtinStringInstanceMethods() []*BuiltinMethodObject {
 			// ```ruby
 			// "3.14".to_d            # => 3.14
 			// "-0.7238943".to_d      # => -0.7238943
-			// "355/133".to_d         # => 3.14159292
+			// "355/113".to_d         # => 3.14159292
 			// ```
 			//
 			// @return [String]
