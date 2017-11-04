@@ -338,6 +338,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// Returns a string with fraction format of the decimal.
 			// If the denominator is 1, '/1` is omitted.
 			// Minus sign will be preserved.
+			// (Actually, the internal rational number is always deducted)
 			//
 			// ```Ruby
 			// a = "-355/113".to_d
