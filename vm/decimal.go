@@ -429,7 +429,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 		},
 		{
 			// Returns the decimal value with a string style.
-			// Maximum digit under the dots is 60, and a trailing 0 is always added.
+			// Maximum digit under the dots is 60.
 			// This is just to print the final value should not be used for recalculation.
 			//
 			// ```Ruby
@@ -593,10 +593,11 @@ func (d *DecimalObject) rocketComparison(
 }
 
 // toString returns the object's approximate float value as the string format.
-// A trailing 0 is always added even no digits are left on the right side of the dot.
 func (d *DecimalObject) toString() string {
 	fs := d.value.FloatString(60)
-	return strings.TrimRight(fs, "0") + "0"
+	fs = strings.TrimRight(fs, "0")
+	fs = strings.TrimRight(fs, ".")
+	return fs
 }
 
 // toJSON just delegates to toString
