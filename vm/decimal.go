@@ -436,7 +436,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// Returns an array with two Decimal elements: numerator and denominator.
 			//
 			// ```ruby
-			// "129.30928304982039482039842".to_d.to_ad
+			// "129.30928304982039482039842".to_d.to_a
 			// # => [6465464152491019741019921, 50000000000000000000000]
 			// ```
 			//
