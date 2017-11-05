@@ -327,34 +327,6 @@ func builtinFloatInstanceMethods() []*BuiltinMethodObject {
 				}
 			},
 		},
-		//{
-		//	// (Not recommended) Converts the Integer object into Decimal object and returns it.
-		//	// Note that this conversion is based on the float representation and the value may be inaccurate in lower digits. Use `Float#to_d` basically.
-		//	//
-		//	// ```Ruby
-		//	// "100.1".to_f.to_df # => 100.099999999999994315658113919198513031005859375
-		//	//
-		//	// a = "3.14159265358979".to_f
-		//	// b = a.to_df
-		//	// #=> 3.141592653589790007373494518105871975421905517578125
-		//	// ```
-		//	//
-		//	// @return [Decimal]
-		//	Name: "to_df",
-		//	Fn: func(receiver Object, sourceLine int) builtinMethodBody {
-		//		return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
-		//
-		//			if len(args) != 0 {
-		//				return t.vm.initErrorObject(errors.ArgumentError, sourceLine, "Expect 0 argument. got=%v", strconv.Itoa(len(args)))
-		//			}
-		//
-		//			fl := receiver.(*FloatObject).value
-		//			de := new(Decimal).SetFloat64(fl)
-		//
-		//			return t.vm.initDecimalObject(de)
-		//		}
-		//	},
-		//},
 		{
 			// Returns the `Integer` representation of self.
 			//
