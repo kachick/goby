@@ -494,6 +494,11 @@ func (f *DecimalObject) Value() interface{} {
 	return f.value
 }
 
+// Alias of Value()
+func (f *DecimalObject) DecimalValue() interface{} {
+	return f.Value()
+}
+
 // Returns integer part of decimal
 func (f *DecimalObject) IntegerValue() int {
 	return int(f.FloatValue())
