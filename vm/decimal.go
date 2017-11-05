@@ -15,8 +15,9 @@ type Int = big.Int
 type Float = big.Float
 
 // (Experiment)
-// DecimalObject represents a comparable decimal number using Go's Rat from math/big
-// representation, which consists of a numerator and a denominator with arbitrary size.
+// DecimalObject represents a comparable decimal number using Go's Rational representation `big.Rat` from math/big package,
+// which consists of a numerator and a denominator with arbitrary size.
+// By using Decimal you can avoid errors on float type during calculations.
 // The numerator can be 0, but the denominator cannot be 0.
 //
 // ```ruby
@@ -24,11 +25,14 @@ type Float = big.Float
 // "-0.7238943".to_d      # => -0.7238943
 // "355/113".to_d         # => 3.1415929203539823008849557522123893805309734513274336283185840
 //
-// a = "1.1".to_d
-// b = "1.0".to_d
-// c = "0.1".to_d
-// a - b # => 0.1
-// a - b == c # => true
+// a = "16.1".to_d
+// b = "1.1".to_d
+// e = "17.2".to_d
+// a + b # => 0.1
+// a + b == e # => true
+//
+// ('16.1'.to_d  + "1.1".to_d).to_s #=> 17.2
+// ('16.1'.to_f  + "1.1".to_f).to_s #=> 17.200000000000003
 // ```
 //
 // - `Decimal.new` is not supported.
@@ -60,6 +64,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// ```Ruby
 			// 1.1 + 2 # => 3.1
 			// ```
+			//
 			// @return [Decimal]
 			Name: "+",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -78,6 +83,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// ```Ruby
 			// 1.5 - 1 # => 0.5
 			// ```
+			//
 			// @return [Decimal]
 			Name: "-",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -96,6 +102,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// ```Ruby
 			// 2.5 * 10 # => 25.0
 			// ```
+			//
 			// @return [Decimal]
 			Name: "*",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -114,6 +121,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// ```Ruby
 			// 4.0 ** 2.5 # => 32.0
 			// ```
+			//
 			// @return [Decimal]
 			Name: "**",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -134,6 +142,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// ```Ruby
 			// 7.5 / 3 # => 2.5
 			// ```
+			//
 			// @return [Decimal]
 			Name: "/",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -155,6 +164,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// a > b # => false
 			// b > a # => true
 			// ```
+			//
 			// @return [Boolean]
 			Name: ">",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -182,6 +192,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// b >= a # => true
 			// a >= e # => true
 			// ```
+			//
 			// @return [Boolean]
 			Name: ">=",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -206,6 +217,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// 1 < 3 # => true
 			// 1 < 1 # => false
 			// ```
+			//
 			// @return [Boolean]
 			Name: "<",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -229,6 +241,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// 1 <= 3 # => true
 			// 1 <= 1 # => true
 			// ```
+			//
 			// @return [Boolean]
 			Name: "<=",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -257,6 +270,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// 1.0 <=> 1 # => 0
 			// 3.5 <=> 1 # => 1
 			// ```
+			//
 			// @return [Integer]
 			Name: "<=>",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -279,6 +293,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// 1.0 == 1     # => true
 			// 1.0 == '1.0' # => false
 			// ```
+			//
 			// @return [Boolean]
 			Name: "==",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
@@ -305,6 +320,7 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			// 1.0 != 1     # => false
 			// 1.0 != '1.0' # => true
 			// ```
+			//
 			// @return [Boolean]
 			Name: "!=",
 			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
