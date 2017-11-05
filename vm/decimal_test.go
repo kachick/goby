@@ -278,3 +278,28 @@ func TestDecimalConversions(t *testing.T) {
 		v.checkSP(t, i, 1)
 	}
 }
+
+func TestArrayConversion(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected []interface{}
+	}{
+		{`
+		"355/133".to_d.to_a
+		`, []interface{}{355, 133}},
+		{`
+		"-355/133".to_d.to_a
+		`, []interface{}{-355, 133}},
+		{`
+		"129.3".to_d.to_a
+		`, []interface{}{1293, 10}},
+	}
+
+	for i, tt := range tests {
+		vm := initTestVM()
+		evaluated := vm.testEval(t, tt.input, getFilename())
+		testArrayObject(t, i, evaluated, tt.expected)
+		vm.checkCFP(t, i, 0)
+		vm.checkSP(t, i, 1)
+	}
+}
