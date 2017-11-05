@@ -138,36 +138,36 @@ func TestDecimalComparisonWithFloat(t *testing.T) {
 	}
 }
 
-//func TestDecimalComparisonWithInteger(t *testing.T) {
-//	tests := []struct {
-//		input    string
-//		expected interface{}
-//	}{
-//		{`'1'.to_d >   2`, false},
-//		{`'2'.to_d >   1`, true},
-//		{`'3'.to_d >   3`, false},
-//		{`'1'.to_d <   2`, true},
-//		{`'2'.to_d <   1`, false},
-//		{`'3'.to_d <   3`, false},
-//		{`'1'.to_d >=  2`, false},
-//		{`'2'.to_d >=  1`, true},
-//		{`'3'.to_d >=  3`, true},
-//		{`'1'.to_d <=  2`, true},
-//		{`'2'.to_d <=  1`, false},
-//		{`'3'.to_d <=  3`, true},
-//		{`'1'.to_d <=> 2`, -1},
-//		{`'2'.to_d <=> 1`, 1},
-//		{`'3'.to_d <=> 3`, 0},
-//	}
-//
-//	for i, tt := range tests {
-//		v := initTestVM()
-//		evaluated := v.testEval(t, tt.input, getFilename())
-//		checkExpected(t, i, evaluated, tt.expected)
-//		v.checkCFP(t, i, 0)
-//		v.checkSP(t, i, 1)
-//	}
-//}
+func TestDecimalComparisonWithInteger(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`'1'.to_d >   2`, false},
+		{`'2'.to_d >   1`, true},
+		{`'3'.to_d >   3`, false},
+		{`'1'.to_d <   2`, true},
+		{`'2'.to_d <   1`, false},
+		{`'3'.to_d <   3`, false},
+		{`'1'.to_d >=  2`, false},
+		{`'2'.to_d >=  1`, true},
+		{`'3'.to_d >=  3`, true},
+		{`'1'.to_d <=  2`, true},
+		{`'2'.to_d <=  1`, false},
+		{`'3'.to_d <=  3`, true},
+		{`'1'.to_d <=> 2`, -1},
+		{`'2'.to_d <=> 1`, 1},
+		{`'3'.to_d <=> 3`, 0},
+	}
+
+	for i, tt := range tests {
+		v := initTestVM()
+		evaluated := v.testEval(t, tt.input, getFilename())
+		checkExpected(t, i, evaluated, tt.expected)
+		v.checkCFP(t, i, 0)
+		v.checkSP(t, i, 1)
+	}
+}
 
 func TestDecimalComparisonFail(t *testing.T) {
 	testsFail := []errorTestCase{
