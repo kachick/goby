@@ -510,7 +510,6 @@ func (f *DecimalObject) FloatValue() float64 {
 	return x
 }
 
-// TODO: Remove instruction argument
 // Apply the passed arithmetic operation, while performing type conversion.
 func (d *DecimalObject) arithmeticOperation(
 	t *thread,
@@ -518,17 +517,10 @@ func (d *DecimalObject) arithmeticOperation(
 	decimalOperation func(leftValue *Decimal, rightValue *Decimal) *Decimal,
 	sourceLine int,
 ) Object {
-	var rightValue *Decimal
 	var result Decimal
 
-	switch rightObject.(type) {
-	case *DecimalObject:
-		rightValue = &rightObject.(*DecimalObject).value
-	case *IntegerObject:
-		rightValue = intToDecimal(rightObject)
-	case *FloatObject:
-		rightValue = floatToDecimal(rightObject)
-	default:
+	rightValue, ok := assertNumeric(rightObject)
+	if ok == false {
 		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
 
@@ -539,7 +531,6 @@ func (d *DecimalObject) arithmeticOperation(
 
 // Apply an equality test, returning true if the objects are considered equal,
 // and false otherwise.
-// TODO: Remove instruction argument
 func (d *DecimalObject) equalityTest(
 	t *thread,
 	rightObject Object,
@@ -562,7 +553,6 @@ func (d *DecimalObject) equalityTest(
 	return toBooleanObject(result)
 }
 
-// TODO: Remove instruction argument
 // Apply the passed numeric comparison, while performing type conversion.
 func (d *DecimalObject) numericComparison(
 	t *thread,
@@ -570,17 +560,10 @@ func (d *DecimalObject) numericComparison(
 	decimalOperation func(leftValue *Decimal, rightValue *Decimal) bool,
 	sourceLine int,
 ) Object {
-	var rightValue *Decimal
 	var result bool
 
-	switch rightObject.(type) {
-	case *DecimalObject:
-		rightValue = &rightObject.(*DecimalObject).value
-	case *IntegerObject:
-		rightValue = intToDecimal(rightObject)
-	case *FloatObject:
-		rightValue = floatToDecimal(rightObject)
-	default:
+	rightValue, ok := assertNumeric(rightObject)
+	if ok == false {
 		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
 
@@ -589,7 +572,6 @@ func (d *DecimalObject) numericComparison(
 	return toBooleanObject(result)
 }
 
-// TODO: Remove instruction argument
 // Apply the passed numeric comparison for rocket operator '<=>', while performing type conversion.
 func (d *DecimalObject) rocketComparison(
 	t *thread,
@@ -597,17 +579,10 @@ func (d *DecimalObject) rocketComparison(
 	decimalOperation func(leftValue *Decimal, rightValue *Decimal) int,
 	sourceLine int,
 ) Object {
-	var rightValue *Decimal
 	var result int
 
-	switch rightObject.(type) {
-	case *DecimalObject:
-		rightValue = &rightObject.(*DecimalObject).value
-	case *IntegerObject:
-		rightValue = intToDecimal(rightObject)
-	case *FloatObject:
-		rightValue = floatToDecimal(rightObject)
-	default:
+	rightValue, ok := assertNumeric(rightObject)
+	if ok == false {
 		return t.vm.initErrorObject(errors.TypeError, sourceLine, errors.WrongArgumentTypeFormat, "Numeric", rightObject.Class().Name)
 	}
 
@@ -632,6 +607,22 @@ func (d *DecimalObject) toJSON() string {
 }
 
 // Other helper functions  ----------------------------------------------
+
+// Type assertion for numeric
+func assertNumeric(n Object) (v *Decimal, result bool) {
+	result = true
+	switch n.(type) {
+	case *DecimalObject:
+		v = &n.(*DecimalObject).value
+	case *IntegerObject:
+		v = intToDecimal(n)
+	case *FloatObject:
+		v = floatToDecimal(n)
+	default:
+		result = false
+	}
+	return v, result
+}
 
 // intToDecimal converts int to Decimal
 func intToDecimal(i Object) *Decimal {
