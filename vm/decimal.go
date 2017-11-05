@@ -431,6 +431,29 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			},
 		},
 		{
+			// Returns an array with two integer elements: numerator and denominator.
+			//
+			// ```ruby
+			// "-355.133".to_a       # => [-133, 133]
+			// ```
+			//
+			// @return [Array]
+			Name: "to_a",
+			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
+				return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
+
+					n := int(receiver.(*DecimalObject).value.Num().Int64())
+					d := int(receiver.(*DecimalObject).value.Denom().Int64())
+					elems := []Object{}
+
+					elems = append(elems, t.vm.initIntegerObject(n))
+					elems = append(elems, t.vm.initIntegerObject(d))
+
+					return t.vm.initArrayObject(elems)
+				}
+			},
+		},
+		{
 			// Returns Float object from Decimal object.
 			// In most case the number of digits in Float is shorter than the one in Decimal.
 			//
