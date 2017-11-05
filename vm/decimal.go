@@ -527,6 +527,32 @@ func builtinDecimalInstanceMethods() []*BuiltinMethodObject {
 			},
 		},
 		{
+			// Returns a hash with two keys (numerator and denominator) and their values.
+			// Returned values are integer, and big number can be be less accurate than `to_h`.
+			//
+			// ```ruby
+			// "129.3".to_d.to_hi   #=> { denominator: 10, numerator: 1293 }
+			// "129.30928304982039482039842".to_d.to_hi
+			// # => { numerator: -9123183826594430976, denominator: -8964879735843078383 }
+			// ```
+			//
+			// @return [Hash]
+			Name: "to_hi",
+			Fn: func(receiver Object, sourceLine int) builtinMethodBody {
+				return func(t *thread, args []Object, blockFrame *normalCallFrame) Object {
+
+					n := int(receiver.(*DecimalObject).value.Num().Int64())
+					d := int(receiver.(*DecimalObject).value.Denom().Int64())
+					h := make(map[string]Object)
+
+					h["denominator"] = t.vm.initIntegerObject(d)
+					h["numerator"] = t.vm.initIntegerObject(n)
+
+					return t.vm.initHashObject(h)
+				}
+			},
+		},
+		{
 			// Returns the truncated Integer object from Decimal object.
 			//
 			// ```Ruby
