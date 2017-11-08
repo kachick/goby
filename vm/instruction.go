@@ -188,9 +188,7 @@ var builtinActions = map[operationType]*action{
 			v := t.stack.pop()
 
 			if c != nil {
-				err := t.vm.initErrorObject(errors.ConstantAlreadyInitializedError, sourceLine, "Constant %s already been initialized. Can't assign value to a constant twice.", constName)
-				t.stack.push(&Pointer{Target: err})
-				return
+				t.pushErrorObject(errors.ConstantAlreadyInitializedError, sourceLine, "Constant %s already been initialized. Can't assign value to a constant twice.", constName)
 			}
 
 			cf.storeConstant(constName, v)
@@ -464,10 +462,7 @@ var builtinActions = map[operationType]*action{
 			method = receiver.findMethod(methodName)
 
 			if method == nil {
-				err := t.vm.initErrorObject(errors.UndefinedMethodError, sourceLine, "Undefined Method '%+v' for %+v", methodName, receiver.toString())
-				t.stack.set(receiverPr, &Pointer{Target: err})
-				t.sp = argPr
-				return
+				t.setErrorObject(receiverPr, argPr, errors.UndefinedMethodError, sourceLine, "Undefined Method '%+v' for %+v", methodName, receiver.toString())
 			}
 
 			// Find Block
